@@ -79,7 +79,7 @@
 
 #define SMALL_BUF_SIZE 128
 #define LARGE_BUF_SIZE 1024
-/*
+
 char *func_list[] = {
     "H5Fcreate", // File interface
     "H5Fopen",                      "H5Fclose",
@@ -131,7 +131,7 @@ int get_func_id(const char *func_name) {
       i++;
   }
   return -1;
-}*/
+}
 
 void change_char(const char *str, char oldChar, char *newStr, char newChar) {
   int len = strlen(str);
@@ -1944,7 +1944,6 @@ herr_t RECORDER_DECL(H5Pclose)(hid_t plist) {
 }
 
 hid_t RECORDER_DECL(H5Pcreate)(hid_t cls_id) {
-  printf("Hello\n");
   hid_t ret;
   double tm1, tm2;
   MAP_OR_FAIL(H5Pcreate);

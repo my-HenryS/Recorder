@@ -20,7 +20,7 @@ CFLAGS_SHARED = -shared -fPIC -I. -I$(srcdir)/include -I$(srcdir)/../\
     -D_LARGEFILE64_SOURCE -DRECORDER_PRELOAD
 
 LIBS += -lz @LIBBZ2@
-LDFLAGS += -lhdf5 -ldl # -L${HDF5_DIR}/lib -lhdf5
+LDFLAGS += -L${HDF5_DIR}/lib -lhdf5 -ldl # -L${HDF5_DIR}/lib -lhdf5
 CFLAGS += $(CFLAGS_SHARED) ${DISABLED_LAYERS}
 
 all: lib/librecorder.so
@@ -29,7 +29,7 @@ lib:
 	@mkdir -p $@
 
 %.po: %.c $(INCL_DEPS) | lib
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ $(LDFLAGS)
 
 lib/librecorder.so: lib/recorder-mpi-io.po lib/recorder-mpi-init-finalize.po lib/recorder-hdf5.po lib/recorder-posix.po
 	$(CC) $(CFLAGS) -o $@ $^ -lpthread -lrt -lz $(LDFLAGS)
