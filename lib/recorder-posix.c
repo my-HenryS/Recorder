@@ -755,7 +755,7 @@ ssize_t RECORDER_DECL(pwrite64)(int fd, const void *buf, size_t count,
   tm2 = recorder_wtime();
 
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f pwrite64 (%d, const void *buf, %d, %d) %d %.5f\n", tm1, fd, count, offset, fd, tm2 - tm1);
+    fprintf(__recorderfh, "%.5f pwrite64 (%d, buf=%p, %d, %d) %d %.5f\n", tm1, fd, buf, count, offset, fd, tm2 - tm1);
 #endif
 
   return (ret);
@@ -878,7 +878,7 @@ ssize_t RECORDER_DECL(read)(int fd, void *buf, size_t count) {
   tm2 = recorder_wtime();
 
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f read (%d, buf, %d) %d %.5f\n", tm1, fd, count, fd, tm2 - tm1);
+    fprintf(__recorderfh, "%.5f read (%d, %p, %d) %d %.5f\n", tm1, fd, buf, count, fd, tm2 - tm1);
 #endif
 
   return (ret);
