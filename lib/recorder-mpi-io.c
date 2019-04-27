@@ -83,13 +83,36 @@ void recorder_mpi_initialize(int *argc, char ***argv) {
   RECORDER_MPI_CALL(PMPI_Comm_rank)(MPI_COMM_WORLD, &rank);
 
   char *logfile_name;
+  char *metafile_name;
   char *logdir_name;
   logfile_name = malloc(PATH_MAX);
   logdir_name = malloc(PATH_MAX);
+  metafile_name = malloc(PATH_MAX);
   char cuser[L_cuserid] = {0};
   cuserid(cuser);
 
   sprintf(logdir_name, "%s_%s", cuser, __progname);
+
+    // write enabled i/o layers to meta file
+  if(rank == 0){
+    FILE *__recordermeta;
+    sprintf(metafile_name, "%s/recorder.meta", logdir_name);
+    __recordermeta = fopen(metafile_name, "w");
+    printf(" metafile_name %s\n", metafile_name);
+
+    fprintf(__recordermeta, "enabled_layers: \n");
+    #ifndef DISABLE_HDF5_TRACE
+    fprintf(__recordermeta, "\tHDF5\n");
+    #endif
+    #ifndef DISABLE_MPIO_TRACE
+    fprintf(__recordermeta, "\tMPI\n");
+    #endif
+    #ifndef DISABLE_POSIX_TRACE
+    fprintf(__recordermeta, "\tPOSIX\n");
+    #endif
+    fclose(__recordermeta);
+  }
+
   int status;
   status = mkdir(logdir_name, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
   sprintf(logfile_name, "%s/log.%d", logdir_name, rank);
