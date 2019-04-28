@@ -58,7 +58,6 @@
 #include <search.h>
 #include <assert.h>
 #include <limits.h>
-#define __USE_GNU
 #include <pthread.h>
 
 #include "recorder.h"
@@ -420,7 +419,7 @@ int RECORDER_DECL(open64)(const char *path, int flags, ...) {
     tm2 = recorder_wtime();
 
     if (__recorderfh != NULL)
-      fprintf(__recorderfh, "%.5f open64 (%s, %d, %d) %d %.5f\n", tm1, path, flags, ret, tm2 - tm1);
+      fprintf(__recorderfh, "%.5f open64 (%s, %d, %d) %d %.5f\n", tm1, path, flags, mode, ret, tm2 - tm1);
 #endif
   } else {
     ret = __real_open64(path, flags);
@@ -429,7 +428,7 @@ int RECORDER_DECL(open64)(const char *path, int flags, ...) {
     tm2 = recorder_wtime();
 
     if (__recorderfh != NULL)
-      fprintf(__recorderfh, "%.5f open64 (%s, %d, %d) %d %.5f\n", tm1, path, flags, ret, tm2 - tm1);
+      fprintf(__recorderfh, "%.5f open64 (%s, %d) %d %.5f\n", tm1, path, flags, ret, tm2 - tm1);
 #endif
   }
 
@@ -665,7 +664,7 @@ ssize_t RECORDER_DECL(pread64)(int fd, void *buf, size_t count,
   tm2 = recorder_wtime();
 
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f pread64 (%s, buf=%p, %d, %d) %d %.5f\n", tm1, actual_file, buf, count, offset, fd, tm2 - tm1);
+    fprintf(__recorderfh, "%.5f pread64 (%s, buf=%p, %ld, %ld) %d %.5f\n", tm1, actual_file, buf, count, offset, fd, tm2 - tm1);
 #endif
 
   return (ret);
@@ -694,7 +693,7 @@ ssize_t RECORDER_DECL(pread)(int fd, void *buf, size_t count, off_t offset) {
   tm2 = recorder_wtime();
 
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f pread(%d, buf=%p, %d, %d) %d %.5f\n", tm1, actual_file, buf, count, offset, fd, tm2 - tm1);
+    fprintf(__recorderfh, "%.5f pread(%s, buf=%p, %ld, %ld) %d %.5f\n", tm1, actual_file, buf, count, offset, fd, tm2 - tm1);
 #endif
 
   return (ret);
@@ -725,7 +724,7 @@ ssize_t RECORDER_DECL(pwrite)(int fd, const void *buf, size_t count,
   tm2 = recorder_wtime();
 
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f pwrite (%s, buf=%p, %d, %d) %d %.5f\n", tm1, actual_file, buf, count, offset, fd, tm2 - tm1);
+    fprintf(__recorderfh, "%.5f pwrite (%s, buf=%p, %ld, %ld) %d %.5f\n", tm1, actual_file, buf, count, offset, fd, tm2 - tm1);
 #endif
 
   return (ret);
@@ -755,7 +754,7 @@ ssize_t RECORDER_DECL(pwrite64)(int fd, const void *buf, size_t count,
   tm2 = recorder_wtime();
 
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f pwrite64 (%d, buf=%p, %d, %d) %d %.5f\n", tm1, fd, buf, count, offset, fd, tm2 - tm1);
+    fprintf(__recorderfh, "%.5f pwrite64 (%d, buf=%p, %ld, %ld) %d %.5f\n", tm1, fd, buf, count, offset, fd, tm2 - tm1);
 #endif
 
   return (ret);
@@ -848,7 +847,7 @@ size_t RECORDER_DECL(fread)(void *ptr, size_t size, size_t nmemb,
   tm2 = recorder_wtime();
 
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f fread (ptr, %d, %d, %d) %d %.5f\n", tm1, size, nmemb, fileno(stream), fileno(stream), tm2 - tm1);
+    fprintf(__recorderfh, "%.5f fread (ptr, %ld, %ld, %d) %d %.5f\n", tm1, size, nmemb, fileno(stream), fileno(stream), tm2 - tm1);
 #endif
 
   return (ret);
@@ -878,7 +877,7 @@ ssize_t RECORDER_DECL(read)(int fd, void *buf, size_t count) {
   tm2 = recorder_wtime();
 
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f read (%d, %p, %d) %d %.5f\n", tm1, fd, buf, count, fd, tm2 - tm1);
+    fprintf(__recorderfh, "%.5f read (%d, %p, %ld) %d %.5f\n", tm1, fd, buf, count, fd, tm2 - tm1);
 #endif
 
   return (ret);
@@ -909,7 +908,7 @@ ssize_t RECORDER_DECL(write)(int fd, const void *buf, size_t count) {
   tm2 = recorder_wtime();
 
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f write (%s, buf=%p, %d) %d %.5f\n", tm1, actual_filename, buf, count, fd, tm2 - tm1);
+    fprintf(__recorderfh, "%.5f write (%s, buf=%p, %ld) %d %.5f\n", tm1, actual_filename, buf, count, fd, tm2 - tm1);
 #endif
 
   return (ret);
@@ -940,7 +939,7 @@ size_t RECORDER_DECL(fwrite)(const void *ptr, size_t size, size_t nmemb,
   tm2 = recorder_wtime();
 
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f fwrite (ptr, %d, %d, %d) %d %.5f\n", tm1, size, nmemb, fileno(stream), fileno(stream), tm2 - tm1);
+    fprintf(__recorderfh, "%.5f fwrite (ptr, %ld, %ld, %d) %d %.5f\n", tm1, size, nmemb, fileno(stream), fileno(stream), tm2 - tm1);
 #endif
 
   return (ret);
@@ -953,10 +952,17 @@ off64_t RECORDER_DECL(lseek64)(int fd, off64_t offset, int whence) {
 
   MAP_OR_FAIL(lseek64);
 
+#ifndef DISABLE_POSIX_TRACE
   tm1 = recorder_wtime();
-  ret = __real_lseek64(fd, offset, whence);
-  tm2 = recorder_wtime();
+#endif
 
+  ret = __real_lseek64(fd, offset, whence);
+
+#ifndef DISABLE_POSIX_TRACE
+  tm2 = recorder_wtime();
+  if (__recorderfh != NULL)
+    fprintf(__recorderfh, "%.5f lseek64 (%d, %ld, %d) %d %.5f\n", tm1, fd, offset, whence, fd, tm2 - tm1);
+#endif
   return (ret);
 }
 
@@ -979,7 +985,7 @@ off_t RECORDER_DECL(lseek)(int fd, off_t offset, int whence) {
   tm2 = recorder_wtime();
 
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f lseek (fd, offset, whence) %d %.5f\n", tm1, fd, tm2 - tm1);
+    fprintf(__recorderfh, "%.5f lseek (%d, %ld, %d) %d %.5f\n", tm1, fd, offset, whence, fd, tm2 - tm1);
 #endif
 
   return (ret);
@@ -1006,7 +1012,7 @@ int RECORDER_DECL(fseek)(FILE *stream, long offset, int whence) {
   tm2 = recorder_wtime();
 
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f fseek (stream=%p, offset=%d, whence=%d) %d %.5f\n", tm1, stream, offset, whence, fileno(stream), tm2 - tm1);
+    fprintf(__recorderfh, "%.5f fseek (stream=%p, offset=%ld, whence=%d) %d %.5f\n", tm1, stream, offset, whence, fileno(stream), tm2 - tm1);
 #endif
 
   return (ret);

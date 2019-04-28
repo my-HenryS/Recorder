@@ -253,7 +253,7 @@ int MPI_Gather(CONST void *sbuf, int scount, MPI_Datatype stype, void *rbuf,
 
   if (__recorderfh != NULL && depth == 1)
     fprintf(__recorderfh, "%.5f MPI_Gather (%p,%d,%s,%p,%d,%s,%d,%s)", tm1,
-            sbuf, scount, stype, rbuf, rcount, rtype, root, comm_name);
+            sbuf, scount, stype_name, rbuf, rcount, rtype_name, root, comm_name);
 
   free(stype_name);
   free(rtype_name);
@@ -287,7 +287,7 @@ int MPI_Scatter(CONST void *sbuf, int scount, MPI_Datatype stype, void *rbuf,
 
   if (__recorderfh != NULL && depth == 1)
     fprintf(__recorderfh, "%.5f MPI_Scatter (%p,%d,%s,%p,%d,%s,%d,%s)", tm1,
-            sbuf, scount, stype, rbuf, rcount, rtype, root, comm_name);
+            sbuf, scount, stype_name, rbuf, rcount, rtype_name, root, comm_name);
 
   free(stype_name);
   free(rtype_name);
@@ -321,8 +321,8 @@ int MPI_Gatherv(CONST void *sbuf, int scount, MPI_Datatype stype, void *rbuf,
   char *rtype_name = type2name(rtype);
 
   if (__recorderfh != NULL && depth == 1)
-    fprintf(__recorderfh, "%.5f MPI_Gatherv (%p,%d,%s,%p,%d,%p,%s,%d,%s)", tm1,
-            sbuf, scount, stype, rbuf, rcount, displs, rtype, root, comm_name);
+    fprintf(__recorderfh, "%.5f MPI_Gatherv (%p,%d,%s,%p,%p,%p,%s,%d,%s)", tm1,
+            sbuf, scount, stype_name, rbuf, rcount, displs, rtype_name, root, comm_name);
 
   free(stype_name);
   free(rtype_name);
@@ -356,8 +356,8 @@ int MPI_Scatterv(CONST void *sbuf, CONST int *scount, CONST int *displa,
   char *rtype_name = type2name(rtype);
 
   if (__recorderfh != NULL && depth == 1)
-    fprintf(__recorderfh, "%.5f MPI_Scatterv (%p,%d,%p,%s,%p,%d,%s,%d,%s)", tm1,
-            sbuf, scount, displa, stype, rbuf, rcount, rtype, root, comm_name);
+    fprintf(__recorderfh, "%.5f MPI_Scatterv (%p,%p,%p,%s,%p,%d,%s,%d,%s)", tm1,
+            sbuf, scount, displa, stype_name, rbuf, rcount, stype_name, root, comm_name);
 
   free(stype_name);
   free(rtype_name);
@@ -427,7 +427,7 @@ int MPI_Allgatherv(CONST void *sbuf, int scount, MPI_Datatype stype, void *rbuf,
   char *rtype_name = type2name(rtype);
 
   if (__recorderfh != NULL && depth == 1)
-    fprintf(__recorderfh, "%.5f MPI_Allgatherv (%p,%d,%s,%p,%d,%p,%s,%s)", tm1,
+    fprintf(__recorderfh, "%.5f MPI_Allgatherv (%p,%d,%s,%p,%p,%p,%s,%s)", tm1,
             sbuf, scount, stype_name, rbuf, rcount, displs, rtype_name,
             comm_name);
 
@@ -559,7 +559,7 @@ int MPI_Reduce_scatter(CONST void *sbuf, void *rbuf, CONST int *rcounts,
   char *type_name = type2name(stype);
 
   if (__recorderfh != NULL && depth == 1)
-    fprintf(__recorderfh, "%.5f MPI_Reduce_scatter (%p,%p,%d,%s,%d,%s)", tm1,
+    fprintf(__recorderfh, "%.5f MPI_Reduce_scatter (%p,%p,%p,%s,%d,%s)", tm1,
             sbuf, rbuf, rcounts, type_name, op, comm_name);
 
   free(type_name);
@@ -758,7 +758,7 @@ int MPI_File_set_size(MPI_File mpi_fh, MPI_Offset size) {
 #ifndef DISABLE_MPIO_TRACE
   tm1 = recorder_wtime();
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f MPI_File_set_size (%d,%d)", tm1, mpi_fh, size);
+    fprintf(__recorderfh, "%.5f MPI_File_set_size (%d ,%lld)", tm1, mpi_fh, size);
 #endif
 
   ret = RECORDER_MPI_CALL(PMPI_File_set_size)(mpi_fh, size);
@@ -783,7 +783,7 @@ int MPI_File_set_view(MPI_File fh, MPI_Offset disp, MPI_Datatype etype,
   char *etype_name = type2name(etype);
   char *filetype_name = type2name(filetype);
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f MPI_File_set_view (%d,%d,%s,%s,%s,%d)", tm1, fh,
+    fprintf(__recorderfh, "%.5f MPI_File_set_view (%d,%ld,%s,%s,%s,%d)", tm1, fh,
             (long)disp, etype_name, filetype_name, datarep, info);
   free(etype_name);
   free(filetype_name);
@@ -833,7 +833,7 @@ int MPI_File_read_at(MPI_File fh, MPI_Offset offset, void *buf, int count,
   tm1 = recorder_wtime();
   char *datatype_name = type2name(datatype);
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f MPI_File_read_at (%d,%d,%p,%d,%s,%p)", tm1, fh,
+    fprintf(__recorderfh, "%.5f MPI_File_read_at (%d,%ld,%p,%d,%s,%p)", tm1, fh,
             (long)offset, buf, count, datatype_name, status);
   free(datatype_name);
 #endif
@@ -858,7 +858,7 @@ int MPI_File_read_at_all(MPI_File fh, MPI_Offset offset, void *buf, int count,
   tm1 = recorder_wtime();
   char *datatype_name = type2name(datatype);
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f MPI_File_read_at_all (%d,%d,%p,%d,%s,%p)", tm1,
+    fprintf(__recorderfh, "%.5f MPI_File_read_at_all (%d,%ld,%p,%d,%s,%p)", tm1,
             fh, (long)offset, buf, count, datatype_name, status);
 #endif
 
@@ -956,7 +956,7 @@ int MPI_File_read_at_all_begin(MPI_File fh, MPI_Offset offset, void *buf,
   tm1 = recorder_wtime();
   char *datatype_name = type2name(datatype);
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f MPI_File_read_at_all_begin (%d,%d,%p,%d,%s)",
+    fprintf(__recorderfh, "%.5f MPI_File_read_at_all_begin (%d,%ld,%p,%d,%s)",
             tm1, fh, (long)offset, buf, count, datatype_name);
   free(datatype_name);
 #endif
@@ -1029,7 +1029,7 @@ int MPI_File_iread_at(MPI_File fh, MPI_Offset offset, void *buf, int count,
   tm1 = recorder_wtime();
   char *typename = type2name(datatype);
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f MPI_File_iread_at (%d,%d,%p,%d,%d,%p)", tm1, fh,
+    fprintf(__recorderfh, "%.5f MPI_File_iread_at (%d,%ld,%p,%d,%s,%p)", tm1, fh,
             (long)offset, buf, count, typename, request);
   free(typename);
 #endif
@@ -1054,7 +1054,7 @@ int MPI_File_iread(MPI_File fh, void *buf, int count, MPI_Datatype datatype,
   tm1 = recorder_wtime();
   char *typename = type2name(datatype);
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f MPI_File_iread (%d,%d,%p,%d,%d,%p)", tm1, fh,
+    fprintf(__recorderfh, "%.5f MPI_File_iread (%d,%p,%d,%s,%p)", tm1, fh,
             buf, count, typename, request);
   free(typename);
 #endif
@@ -1078,7 +1078,7 @@ int MPI_File_iread_shared(MPI_File fh, void *buf, int count,
   tm1 = recorder_wtime();
   char *typename = type2name(datatype);
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f MPI_File_iread_shared (%d,%d,%p,%d,%d,%p)", tm1,
+    fprintf(__recorderfh, "%.5f MPI_File_iread_shared (%d,%p,%d,%s,%p)", tm1,
             fh, buf, count, typename, request);
   free(typename);
 #endif
@@ -1128,7 +1128,7 @@ int MPI_File_write_at(MPI_File fh, MPI_Offset offset, CONST void *buf,
   tm1 = recorder_wtime();
   char *datatype_name = type2name(datatype);
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f MPI_File_write_at (%d,%d,%p,%d,%s,%p)", tm1, fh,
+    fprintf(__recorderfh, "%.5f MPI_File_write_at (%d,%ld,%p,%d,%s,%p)", tm1, fh,
             (long)offset, buf, count, datatype_name, status);
   free(datatype_name);
 #endif
@@ -1154,7 +1154,7 @@ int MPI_File_write_at_all(MPI_File fh, MPI_Offset offset, CONST void *buf,
   tm1 = recorder_wtime();
   char *datatype_name = type2name(datatype);
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f MPI_File_write_at_all (%d,%d,%p,%d,%s,%p)", tm1,
+    fprintf(__recorderfh, "%.5f MPI_File_write_at_all (%d,%ld,%p,%d,%s,%p)", tm1,
             fh, (long)offset, buf, count, datatype_name, status);
   free(datatype_name);
 #endif
@@ -1255,7 +1255,7 @@ int MPI_File_write_at_all_begin(MPI_File fh, MPI_Offset offset, CONST void *buf,
   tm1 = recorder_wtime();
   if (__recorderfh != NULL)
     fprintf(__recorderfh,
-            "%.5f MPI_File_write_at_all_begin (%d,%d,%p,%d,%s) \n", tm1, fh,
+            "%.5f MPI_File_write_at_all_begin (%d,%ld,%p,%d,%s) \n", tm1, fh,
             (long)offset, buf, count, typename);
   free(typename);
 #endif
