@@ -100,16 +100,19 @@ void recorder_mpi_initialize(int *argc, char ***argv) {
     __recordermeta = fopen(metafile_name, "w");
     printf(" metafile_name %s\n", metafile_name);
 
-    fprintf(__recordermeta, "enabled_layers: \n");
+    fprintf(__recordermeta, "enabled_layers:");
     #ifndef DISABLE_HDF5_TRACE
-    fprintf(__recordermeta, "\tHDF5\n");
+    fprintf(__recordermeta, " HDF5");
     #endif
     #ifndef DISABLE_MPIO_TRACE
-    fprintf(__recordermeta, "\tMPI\n");
+    fprintf(__recordermeta, " MPI");
     #endif
     #ifndef DISABLE_POSIX_TRACE
-    fprintf(__recordermeta, "\tPOSIX\n");
+    fprintf(__recordermeta, " POSIX");
     #endif
+    fprintf(__recordermeta, "\n");
+    fprintf(__recordermeta, "workload_start_time:");
+    fprintf(__recordermeta, " %.5f\n",recorder_wtime());
     fclose(__recordermeta);
   }
 
