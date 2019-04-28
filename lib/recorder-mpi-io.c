@@ -92,8 +92,10 @@ void recorder_mpi_initialize(int *argc, char ***argv) {
   cuserid(cuser);
 
   sprintf(logdir_name, "%s_%s", cuser, __progname);
+  int status;
+  status = mkdir(logdir_name, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
 
-    // write enabled i/o layers to meta file
+  // write enabled i/o layers to meta file
   if(rank == 0){
     FILE *__recordermeta;
     sprintf(metafile_name, "%s/recorder.meta", logdir_name);
@@ -116,8 +118,6 @@ void recorder_mpi_initialize(int *argc, char ***argv) {
     fclose(__recordermeta);
   }
 
-  int status;
-  status = mkdir(logdir_name, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
   sprintf(logfile_name, "%s/log.%d", logdir_name, rank);
   __recorderfh = fopen(logfile_name, "w");
   depth = 0;

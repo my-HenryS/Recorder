@@ -216,6 +216,7 @@ char *comm2name(MPI_Comm comm) {
   int len;
   PMPI_Comm_get_name(comm, tmp, &len);
   tmp[len] = 0;
+  if(len == 0) strcpy(tmp, "MPI_COMM_UNKNOWN");
   return tmp;
 }
 
