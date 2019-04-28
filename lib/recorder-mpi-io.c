@@ -700,7 +700,7 @@ int MPI_File_open(MPI_Comm comm, CONST char *filename, int amode, MPI_Info info,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", *fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -724,7 +724,7 @@ int MPI_File_close(MPI_File *fh) {
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", *fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -745,27 +745,27 @@ int MPI_File_sync(MPI_File fh) {
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
 }
 
-int MPI_File_set_size(MPI_File mpi_fh, MPI_Offset size) {
+int MPI_File_set_size(MPI_File fh, MPI_Offset size) {
   int ret;
   double tm1, tm2;
 
 #ifndef DISABLE_MPIO_TRACE
   tm1 = recorder_wtime();
   if (__recorderfh != NULL)
-    fprintf(__recorderfh, "%.5f MPI_File_set_size (%d ,%lld)", tm1, mpi_fh, size);
+    fprintf(__recorderfh, "%.5f MPI_File_set_size (%d ,%lld)", tm1, fh, size);
 #endif
 
-  ret = RECORDER_MPI_CALL(PMPI_File_set_size)(mpi_fh, size);
+  ret = RECORDER_MPI_CALL(PMPI_File_set_size)(fh, size);
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -794,7 +794,7 @@ int MPI_File_set_view(MPI_File fh, MPI_Offset disp, MPI_Datatype etype,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -818,7 +818,7 @@ int MPI_File_read(MPI_File fh, void *buf, int count, MPI_Datatype datatype,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -843,7 +843,7 @@ int MPI_File_read_at(MPI_File fh, MPI_Offset offset, void *buf, int count,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -867,7 +867,7 @@ int MPI_File_read_at_all(MPI_File fh, MPI_Offset offset, void *buf, int count,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -891,7 +891,7 @@ int MPI_File_read_all(MPI_File fh, void *buf, int count, MPI_Datatype datatype,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -916,7 +916,7 @@ int MPI_File_read_shared(MPI_File fh, void *buf, int count,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -941,7 +941,7 @@ int MPI_File_read_ordered(MPI_File fh, void *buf, int count,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -965,7 +965,7 @@ int MPI_File_read_at_all_begin(MPI_File fh, MPI_Offset offset, void *buf,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -989,7 +989,7 @@ int MPI_File_read_all_begin(MPI_File fh, void *buf, int count,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -1014,7 +1014,7 @@ int MPI_File_read_ordered_begin(MPI_File fh, void *buf, int count,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -1039,7 +1039,7 @@ int MPI_File_iread_at(MPI_File fh, MPI_Offset offset, void *buf, int count,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -1063,7 +1063,7 @@ int MPI_File_iread(MPI_File fh, void *buf, int count, MPI_Datatype datatype,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -1088,7 +1088,7 @@ int MPI_File_iread_shared(MPI_File fh, void *buf, int count,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -1113,7 +1113,7 @@ int MPI_File_write(MPI_File fh, CONST void *buf, int count,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -1138,7 +1138,7 @@ int MPI_File_write_at(MPI_File fh, MPI_Offset offset, CONST void *buf,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -1164,7 +1164,7 @@ int MPI_File_write_at_all(MPI_File fh, MPI_Offset offset, CONST void *buf,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -1189,7 +1189,7 @@ int MPI_File_write_all(MPI_File fh, CONST void *buf, int count,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -1214,7 +1214,7 @@ int MPI_File_write_shared(MPI_File fh, CONST void *buf, int count,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -1239,7 +1239,7 @@ int MPI_File_write_ordered(MPI_File fh, CONST void *buf, int count,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -1265,7 +1265,7 @@ int MPI_File_write_at_all_begin(MPI_File fh, MPI_Offset offset, CONST void *buf,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -1289,7 +1289,7 @@ int MPI_File_write_all_begin(MPI_File fh, CONST void *buf, int count,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
@@ -1313,7 +1313,7 @@ int MPI_File_write_ordered_begin(MPI_File fh, CONST void *buf, int count,
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", ret, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", fh, tm2 - tm1);
 #endif
 
   return (ret);
