@@ -727,7 +727,7 @@ int MPI_File_close(MPI_File *fh) {
   tm2 = recorder_wtime();
 
 #ifndef DISABLE_MPIO_TRACE
-  fprintf(__recorderfh, " %d %.5f\n", *fh, tm2 - tm1);
+  fprintf(__recorderfh, " %d %.5f\n", tmp_fh, tm2 - tm1);
 #endif
 
   return (ret);
